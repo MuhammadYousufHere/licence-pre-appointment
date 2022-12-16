@@ -27,11 +27,19 @@
   .counters-container {
     display: flex;
   }
-  .licence_type_body_content_item {
+  .selected {
+    .item {
+      border-color: #8c12d4 !important;
+    }
+    svg {
+      color: #8c12d4 !important;
+    }
+  }
+  .slot_body_content_item {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: 0.3rem;
     border: 1px solid rgba(0, 0, 0, 0.125);
     background-color: #ffffff;
     border-left: none;
@@ -41,14 +49,22 @@
     }
     .item {
       text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      padding: 12px;
+      border-radius: 0.25em;
+      cursor: pointer;
+
       svg {
         font-size: 2rem;
       }
       .available {
         color: #28a745;
+        border-color: #28a745;
       }
       .unavailable {
         color: #dc3545;
+        border-color: #dc3545;
+        cursor: not-allowed;
       }
     }
     &:first-of-type {

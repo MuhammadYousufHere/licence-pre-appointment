@@ -16,7 +16,7 @@ const Branch: FC<BranchProps> = ({ branchesData }) => {
   const [branch, setBranch] = useState(values.step_2.branch);
   return (
     <div className='branch_container'>
-      <div className='licence_type_body'>
+      <div className='branch_body'>
         <div className='branch_body_header'>
           <h3 className='title'>Select Driving Licence Branch</h3>
         </div>

@@ -23,6 +23,7 @@ export const MultistepFormWrapper = ({
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
   const [completed, setCompleted] = useState(false);
+  const currentValidationSchema = currentChild.props.validationSchema;
   function isLastStep() {
     return step === childrenArray.length - 1;
   }
@@ -39,6 +40,7 @@ export const MultistepFormWrapper = ({
           helpers.setTouched({});
         }
       }}
+      validationSchema={currentValidationSchema}
     >
       {({ isSubmitting }) => (
         <Form autoComplete='off'>

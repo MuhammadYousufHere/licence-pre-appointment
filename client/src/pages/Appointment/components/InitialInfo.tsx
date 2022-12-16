@@ -7,7 +7,7 @@ import './initialInfo.scss';
 interface InitialInfoProps {
   // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const InitialInfo: FC<InitialInfoProps> = ({}) => {
+const InitialInfo: FC<InitialInfoProps> = () => {
   const { values, handleChange, errors } = useFormikContext<IntialValues>();
   return (
     <div className='initial_info'>

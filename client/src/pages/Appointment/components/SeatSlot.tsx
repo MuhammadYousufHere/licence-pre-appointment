@@ -33,46 +33,17 @@ const SeatSlot: FC<SeatSlotProps> = ({ slotsData, counter }) => {
           </div>
           <div className='counters-container'>
             <div className='slot_body_content'>
-              <div className='licence_type_body_content_item'>
+              <div className='slot_body_content_item'>
                 <p>Counter {counter}</p>
               </div>
               {slotsData.map((slot) => (
                 <div
                   key={slot.id}
-                  className={`licence_type_body_content_item ${
+                  className={`slot_body_content_item ${
                     selected === slot.slotTime && 'selected'
                   }`}
                   onClick={() => {
                     onSelectHandler(slot.slotTime);
-                  }}
-                >
-                  <div className='item'>
-                    <MdOutlineEventAvailable
-                      className={slot.available ? 'available' : 'unavailable'}
-                    />
-                    <p>
-                      {slot.slotTime}# {counter}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className='slot_body_content'>
-              <div className='licence_type_body_content_item'>
-                <p>Counter {+counter + 1}</p>
-              </div>
-              {slotsData.map((slot) => (
-                <div
-                  key={slot.id}
-                  className={`licence_type_body_content_item ${
-                    selected === slot.slotTime && 'selected'
-                  }`}
-                  onClick={() => {
-                    onSelectHandler(slot.slotTime);
-                    setFieldValue(
-                      'step_5.counter',
-                      `${slot.slotTime} # ${counter}`
-                    );
                   }}
                 >
                   <div className='item'>

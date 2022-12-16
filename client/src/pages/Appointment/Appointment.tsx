@@ -111,7 +111,7 @@ const seatSlotData = [
   { available: true, id: 2, slotTime: '09:44' },
   { available: false, id: 3, slotTime: '10:22' },
   { available: true, id: 4, slotTime: '10:32' },
-  { available: true, id: 5, slotTime: '11:22' },
+  { available: false, id: 5, slotTime: '11:22' },
   { available: true, id: 6, slotTime: '12:22' },
 ];
 const finalValues = {
@@ -157,24 +157,47 @@ const Appointment = () => {
             await sleep(1000);
             console.log('values', values);
           }}
-          validationSchema={object().shape({
-            step_1: object().shape({
-              name: validate.name,
-              mobile: validate.mobileNum,
-              cnic: validate.cnic,
-            }),
-          })}
         >
-          <FormikStep label='Personal Data'>
+          <FormikStep
+            label='Personal Data'
+            validationSchema={object().shape({
+              step_1: object().shape({
+                name: validate.name,
+                mobile: validate.mobileNum,
+                cnic: validate.cnic,
+              }),
+            })}
+          >
             <InitialInfo />
           </FormikStep>
-          <FormikStep label='Branch'>
+          <FormikStep
+            label='Branch'
+            validationSchema={object().shape({
+              step_2: object().shape({
+                branch: validate.branch,
+              }),
+            })}
+          >
             <Branch branchesData={branches} />
           </FormikStep>
-          <FormikStep label='Licence Types'>
+          <FormikStep
+            label='Licence Types'
+            validationSchema={object().shape({
+              step_3: object().shape({
+                licenceType: validate.licenceType,
+              }),
+            })}
+          >
             <LicenceType licenceTypes={licenceTypes} />
           </FormikStep>
-          <FormikStep label='Time Slot'>
+          <FormikStep
+            label='Time Slot'
+            validationSchema={object().shape({
+              step_4: object().shape({
+                timeSlot: validate.timeSlot,
+              }),
+            })}
+          >
             <TimeSlotSelection
               title='Time Slot Availability'
               subtitle='Pre-Appointment for Next Day :'
@@ -182,7 +205,14 @@ const Appointment = () => {
               data={data}
             />
           </FormikStep>
-          <FormikStep label='Seat Slot'>
+          <FormikStep
+            label='Seat Slot'
+            validationSchema={object().shape({
+              step_5: object().shape({
+                counter: validate.dealingCounter,
+              }),
+            })}
+          >
             <SeatSlot
               counter={1}
               slotsData={seatSlotData}
