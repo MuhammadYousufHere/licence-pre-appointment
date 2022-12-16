@@ -1,5 +1,5 @@
 import { MultistepFormWrapper, FormikStep } from './MultistepFormWrapper';
-import { object, number, mixed } from 'yup';
+import { object } from 'yup';
 import { ImClock } from 'react-icons/im';
 import TimeSlotSelection from './components/TimeSlotSelection';
 import { Card } from './components';
