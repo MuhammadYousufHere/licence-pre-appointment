@@ -1,11 +1,10 @@
-import { FC, memo } from 'react';
+import { memo } from 'react';
 import './pagination.scss';
 interface Props {
   length: number;
   current: number;
 }
 const Pagination = memo(({ length, current }: Props) => {
-  console.log(current);
   return (
     <div className='pagination-container'>
       <div className='pagination-body'>

@@ -2,6 +2,7 @@ import { ReactNode, Children, useState, ReactElement } from 'react';
 import { Formik, FormikConfig, FormikValues, Form } from 'formik';
 import Pagination from './components/Pagination';
 import { Button } from '../../components/common';
+import './appointmentStyles.scss';
 export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
   label: string;
@@ -25,15 +26,7 @@ export const MultistepFormWrapper = ({
   function isLastStep() {
     return step === childrenArray.length - 1;
   }
-  const handleNext = (
-    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  ) => {
-    if (isLastStep()) {
-      setCompleted(true);
-    } else {
-      setStep((s) => s + 1);
-    }
-  };
+
   return (
     <Formik
       {...props}
@@ -47,28 +40,12 @@ export const MultistepFormWrapper = ({
         }
       }}
     >
-      {({ isSubmitting, handleSubmit }) => (
+      {({ isSubmitting }) => (
         <Form autoComplete='off'>
-          {' '}
-          <div>
-            {childrenArray.map((child, index) => (
-              <div key={child.props.label}>
-                {/* <div>{child.props.label}</div> */}
-              </div>
-            ))}
-          </div>
           {currentChild}
-          <main
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              gap: '1rem',
-              marginTop: '1rem',
-            }}
-          >
+          <main className='form-footer'>
             {step > 0 ? (
-              <div className='action-btns'>
+              <div className='action-btn'>
                 <Button
                   disabled={isSubmitting}
                   variant='secondary'
@@ -78,12 +55,11 @@ export const MultistepFormWrapper = ({
                 />
               </div>
             ) : null}
-            <div>
+            <div className='action-btn'>
               <Button
                 disabled={isSubmitting}
                 variant='secondary'
                 type='submit'
-                // onClick={() => handleNext(handleSubmit)}
                 title={
                   isSubmitting ? 'Submitting' : isLastStep() ? 'Submit' : 'Next'
                 }

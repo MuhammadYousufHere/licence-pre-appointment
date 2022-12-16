@@ -1,9 +1,9 @@
 import { MultistepFormWrapper, FormikStep } from './MultistepFormWrapper';
 import { object, number, mixed } from 'yup';
 import { ImClock } from 'react-icons/im';
-import EditableTable from './components/Table';
+import TimeSlotSelection from './components/TimeSlotSelection';
 import { Card } from './components';
-import { Data } from './components/Table';
+import { Data } from './components/TimeSlotSelection';
 import LicenceType from './components/LicenceType';
 import Branch from './components/Branch';
 import SeatSlot from './components/SeatSlot';
@@ -12,8 +12,6 @@ import PublicMessage from './components/PublicMessage';
 import Header from './components/Header';
 import InitialInfo from './components/InitialInfo';
 import FinalInfo from './components/FinalInfo';
-import Pagination from './components/Pagination';
-import { Button } from '../../components/common';
 import './appointmentStyles.scss';
 import { useFormValidation } from '../../hooks';
 const sleep = (time: number) => new Promise((acc) => setTimeout(acc, time));
@@ -28,16 +26,10 @@ export interface IntialValues {
   };
   step_3: { licenceType: string };
   step_4: {
-    timeSlot: string | number;
+    timeSlot: string;
   };
   step_5: {
     counter: string;
-  };
-  step_6: {
-    confirmInfo: boolean;
-  };
-  step_7: {
-    publicMessage: boolean;
   };
 }
 const data: Data = {
@@ -154,12 +146,6 @@ const Appointment = () => {
     step_5: {
       counter: '',
     },
-    step_6: {
-      confirmInfo: false,
-    },
-    step_7: {
-      publicMessage: false,
-    },
   };
   return (
     <>
@@ -168,7 +154,7 @@ const Appointment = () => {
         <MultistepFormWrapper
           initialValues={initialValues}
           onSubmit={async (values) => {
-            await sleep(3000);
+            await sleep(1000);
             console.log('values', values);
           }}
           validationSchema={object().shape({
@@ -186,27 +172,20 @@ const Appointment = () => {
             <Branch branchesData={branches} />
           </FormikStep>
           <FormikStep label='Licence Types'>
-            <LicenceType
-              licenceTypes={licenceTypes}
-              selectedType={() => {}}
-            />
+            <LicenceType licenceTypes={licenceTypes} />
           </FormikStep>
           <FormikStep label='Time Slot'>
-            <EditableTable
+            <TimeSlotSelection
               title='Time Slot Availability'
               subtitle='Pre-Appointment for Next Day :'
               date='16-Dec-22'
               data={data}
-              selectedTime={(s) => {
-                console.log(s);
-              }}
             />
           </FormikStep>
           <FormikStep label='Seat Slot'>
             <SeatSlot
               counter={1}
               slotsData={seatSlotData}
-              selectedSlot={(slot) => console.log(slot)}
             />
           </FormikStep>
           <FormikStep label='Confirm Info'>
