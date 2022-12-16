@@ -1,5 +1,3 @@
-import { Field } from "formik";
-import { Input } from "../../components/Form";
 import { MultistepFormWrapper, FormikStep } from "./MultistepFormWrapper";
 import { object, number, mixed } from "yup";
 import { ImClock } from "react-icons/im";
@@ -17,7 +15,31 @@ import FinalInfo from "./components/FinalInfo";
 import Pagination from "./components/Pagination";
 import { Button } from "../../components/common";
 import "./appointmentStyles.scss";
+import { useFormValidation } from "../../hooks";
 const sleep = (time: number) => new Promise((acc) => setTimeout(acc, time));
+export interface IntialValues {
+  step_1: {
+    name: string;
+    mobile: string | number;
+    cnic: string | number;
+  };
+  step_2: {
+    branch: string;
+  };
+  step_3: { licenceType: string };
+  step_4: {
+    timeSlot: string | number;
+  };
+  step_5: {
+    counter: string;
+  };
+  step_6: {
+    confirmInfo: boolean;
+  };
+  step_7: {
+    publicMessage: boolean;
+  };
+}
 const data: Data = {
   tableBody: [
     {
@@ -100,7 +122,7 @@ const seatSlotData = [
   { available: true, id: 5, slotTime: "11:22" },
   { available: true, id: 6, slotTime: "12:22" },
 ];
-const values = {
+const finalValues = {
   name: "Muhammad Ali",
   cnic: "1234567890123",
   dealingTime: "10:00",
@@ -112,103 +134,94 @@ const values = {
   timeSlot: "10:00",
 };
 const Appointment = () => {
+  const validate = useFormValidation();
+  const initialValues: IntialValues = {
+    step_1: {
+      name: "",
+      mobile: "",
+      cnic: "",
+    },
+    step_2: {
+      branch: "",
+    },
+    step_3: {
+      licenceType: "",
+    },
+    step_4: {
+      timeSlot: "",
+    },
+
+    step_5: {
+      counter: "",
+    },
+    step_6: {
+      confirmInfo: false,
+    },
+    step_7: {
+      publicMessage: false,
+    },
+  };
   return (
-    <MultistepFormWrapper
-      initialValues={{
-        firstName: "",
-        lastName: "",
-        millionaire: false,
-        money: 0,
-        description: "",
-      }}
-      onSubmit={async (values) => {
-        await sleep(3000);
-        console.log("values", values);
-      }}
-    >
-      <FormikStep label="Personal Data">
-        <div>
-          <Field name="firstName" label="First Name" />
-        </div>
-        <div>
-          <Field name="lastName" component={Input} label="Last Name" />
-        </div>
-        <div>
-          <Field
-            name="millionaire"
-            type="checkbox"
-            component={Input}
-            Label={{ label: "I am a millionaire" }}
-          />
-        </div>
-      </FormikStep>
-      <FormikStep
-        label="Bank Accounts"
-        validationSchema={object({
-          money: mixed().when("millionaire", {
-            is: true,
-            then: number()
-              .required()
-              .min(
-                1_000_000,
-                "Because you said you are a millionaire you need to have 1 million"
-              ),
-            otherwise: number().required(),
-          }),
-        })}
-      >
-        <div>
-          <Field
-            name="money"
-            type="number"
-            component={Input}
-            label="All the money I have"
-          />
-        </div>
-      </FormikStep>
-      <FormikStep label="More Info">
-        <div>
-          <Field name="description" component={Input} label="Description" />
-        </div>
-      </FormikStep>
-    </MultistepFormWrapper>
+    <>
+      <Header />
+      <Card>
+        <MultistepFormWrapper
+          initialValues={initialValues}
+          onSubmit={async (values) => {
+            await sleep(3000);
+            console.log("values", values);
+          }}
+          validationSchema={object().shape({
+            step_1: object().shape({
+              name: validate.name,
+              mobile: validate.mobileNum,
+              cnic: validate.cnic,
+            }),
+            step_2: object().shape({
+              branch: validate.branch,
+            }),
+          })}
+        >
+          <FormikStep label="Personal Data">
+            <InitialInfo />
+          </FormikStep>
+          <FormikStep label="Branch">
+            <Branch branchesData={branches} />
+          </FormikStep>
+          <FormikStep label="Licence Types">
+            <LicenceType licenceTypes={licenceTypes} selectedType={() => {}} />
+          </FormikStep>
+          <FormikStep label="Time Slot">
+            <EditableTable
+              title="Time Slot Availability"
+              subtitle="Pre-Appointment for Next Day :"
+              date="16-Dec-22"
+              data={data}
+              selectedTime={(s) => {
+                console.log(s);
+              }}
+            />
+          </FormikStep>
+          <FormikStep label="Seat Slot">
+            <SeatSlot
+              counter={1}
+              slotsData={seatSlotData}
+              selectedSlot={(slot) => console.log(slot)}
+            />
+          </FormikStep>
+          <FormikStep label="Confirm Info">
+            <ConfirmInfo values={finalValues} />
+          </FormikStep>
+          <FormikStep label="Public Message">
+            <PublicMessage />
+          </FormikStep>
+          <FormikStep label="Final Info Info">
+            <FinalInfo values={finalValues} />
+          </FormikStep>
+        </MultistepFormWrapper>
+      </Card>
+    </>
   );
 };
 
 export default Appointment;
-{
-  /* <Header />
-      <Card>
-        <InitialInfo />
-
-        <Branch
-          branchesData={branches}
-          selectedBranch={(branch) => console.log(branch)}
-        />
-        <LicenceType
-          licenceTypes={licenceTypes}
-          selectedType={(selected) => console.log(selected)}
-        />
-        <EditableTable
-          title="Time Slot Availability"
-          subtitle="Pre-Appointment for Next Day :"
-          date="16-Dec-22"
-          data={data}
-          selectedTime={(s) => {
-            console.log(s);
-          }}
-        />
-        <SeatSlot
-          counter={1}
-          slotsData={seatSlotData}
-          selectedSlot={(slot) => console.log(slot)}
-        />
-        <ConfirmInfo values={values} />
-        <PublicMessage />
-        <FinalInfo values={values} />
-        <div className="action">
-          <Button title="Next" variant="secondary" />
-        </div>
-        <Pagination />
-      </Card> */
-}

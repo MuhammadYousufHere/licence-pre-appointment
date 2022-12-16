@@ -1,5 +1,7 @@
 import { ReactNode, Children, useState, ReactElement } from "react";
 import { Formik, FormikConfig, FormikValues, Form } from "formik";
+import Pagination from "./components/Pagination";
+import { Button } from "../../components/common";
 export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, "children" | "validationSchema"> {
   label: string;
@@ -23,6 +25,15 @@ export const MultistepFormWrapper = ({
   function isLastStep() {
     return step === childrenArray.length - 1;
   }
+  const handleNext = (
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  ) => {
+    if (isLastStep()) {
+      setCompleted(true);
+    } else {
+      setStep((s) => s + 1);
+    }
+  };
   return (
     <Formik
       {...props}
@@ -36,36 +47,50 @@ export const MultistepFormWrapper = ({
         }
       }}
     >
-      {({ isSubmitting, errors }) => (
+      {({ isSubmitting, handleSubmit }) => (
         <Form autoComplete="off">
           {" "}
           <div>
             {childrenArray.map((child, index) => (
               <div key={child.props.label}>
-                <div>{child.props.label}</div>
+                {/* <div>{child.props.label}</div> */}
               </div>
             ))}
           </div>
           {currentChild}
-          <main>
+          <main
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: "1rem",
+              marginTop: "1rem",
+            }}
+          >
             {step > 0 ? (
-              <div>
-                <button
+              <div className="action-btns">
+                <Button
                   disabled={isSubmitting}
-                  color="primary"
+                  variant="secondary"
                   onClick={() => setStep((s) => s - 1)}
                   type="button"
-                >
-                  Back
-                </button>
+                  title="Back"
+                />
               </div>
             ) : null}
             <div>
-              <button disabled={isSubmitting} type="submit">
-                {isSubmitting ? "Submitting" : isLastStep() ? "Submit" : "Next"}
-              </button>
+              <Button
+                disabled={isSubmitting}
+                variant="secondary"
+                type="button"
+                onClick={() => handleNext(handleSubmit)}
+                title={
+                  isSubmitting ? "Submitting" : isLastStep() ? "Submit" : "Next"
+                }
+              />
             </div>
           </main>
+          <Pagination />
         </Form>
       )}
     </Formik>
