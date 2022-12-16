@@ -1,7 +1,24 @@
-import { FC } from "react";
-import ErrorMessage from "./ErrorMessage";
+import { Field } from "formik";
+import React, { FC } from "react";
+
+import ErrorMessage from "../../components/Form/ErrorMessage";
 import "./inputStyles.scss";
-import { InputProps } from "./types";
+export interface InputProps {
+  name: string;
+  label?: string;
+  type?: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+  id?: string;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
+  icon?: React.ReactNode | JSX.Element;
+  onToggle?: () => void;
+  pattern?: string;
+  countryCode?: string;
+}
 const Input: FC<InputProps> = (props) => {
   const {
     label,
@@ -20,7 +37,7 @@ const Input: FC<InputProps> = (props) => {
       <div className="input-group">
         <label htmlFor={id}>{label}</label>
         <div className="input-box">
-          <input
+          <Field
             type={type}
             id={id}
             name={name}

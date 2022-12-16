@@ -1,5 +1,5 @@
-import React from 'react';
-
+import { FormikConfig } from "formik";
+import React from "react";
 export interface InputProps {
   name: string;
   label?: string;
@@ -15,6 +15,7 @@ export interface InputProps {
   onToggle?: () => void;
   pattern?: string;
   countryCode?: string;
+  fomikProps?: FormikConfig<T>;
 }
 
 export interface SearchProps {
@@ -33,7 +34,7 @@ export interface DropdownProps {
     name: string;
   }[];
   errorMessage?: string;
-  handleItemClick: (id: string | number) => void;
+  handleItemClick: (id: string | number | string) => void;
   selectedItem: string | null;
   setSelectedItem: React.Dispatch<React.SetStateAction<string>>;
 }
