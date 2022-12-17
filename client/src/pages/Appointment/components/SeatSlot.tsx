@@ -44,6 +44,7 @@ const SeatSlot: FC<SeatSlotProps> = ({ slotsData, counter }) => {
                   }`}
                   onClick={() => {
                     onSelectHandler(slot.slotTime);
+                    setFieldValue('step_5.counter', slot.slotTime);
                   }}
                 >
                   <div className='item'>

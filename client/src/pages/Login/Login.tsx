@@ -73,7 +73,7 @@ const Login = () => {
     );
   }
   if (user) {
-    navigate('/dashboard', { state: { user } });
+    navigate('/appointment', { state: { user } });
   }
   return (
     <>
