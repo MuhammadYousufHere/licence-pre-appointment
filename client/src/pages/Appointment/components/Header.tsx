@@ -1,16 +1,22 @@
-import './header.scss';
+import { Link } from "react-router-dom";
+import "./header.scss";
 
 const Header = () => {
   return (
-    <div className='header-container'>
-      <div className='header-body'>
-        <div className='logo'>
-          <img
-            src='https://dls.sindhpolice.gov.pk/assets/images/logo.png'
-            alt='logo'
-          />
-          <br />
-          Online Pre-Appointment
+    <div className="header-container">
+      <div className="header-body">
+        <Link to="/appointment">
+          <div className="logo">
+            <img
+              src="https://dls.sindhpolice.gov.pk/assets/images/logo.png"
+              alt="logo"
+            />
+            <br />
+            Online Pre-Appointment
+          </div>
+        </Link>
+        <div className="header-body-right">
+          <Link to="/appointment/verify">Verify Appointment</Link>
         </div>
       </div>
     </div>

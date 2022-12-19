@@ -1,10 +1,13 @@
+import { format } from "date-fns";
 import { FC } from "react";
 import wa from "../../../assets/whatsapbtn.jpeg";
+import { Appointment } from "../../../features/slices/appointmentSlice";
 import "./finalInfo.scss";
-interface FinalInfoProps {
-  values?: any;
+export interface FinalInfoProps {
+  appointment: Appointment;
 }
-const FinalInfo: FC<FinalInfoProps> = ({ values }) => {
+
+const FinalInfo: FC<FinalInfoProps> = ({ appointment }) => {
   return (
     <div className="finalinfo-container">
       <div className="finalinfo_body">
@@ -17,31 +20,37 @@ const FinalInfo: FC<FinalInfoProps> = ({ values }) => {
               <tr>
                 <td>Token</td>
                 <td>
-                  <p className="token">505</p>
+                  <p className="token">{appointment?.payload?.tokenNo}</p>
                 </td>
               </tr>
               <tr>
                 <td>Name</td>
                 <td>
-                  <p>{values.name}</p>
+                  <p>{appointment?.payload?.name}</p>
                 </td>
               </tr>
               <tr>
                 <td>CNIC</td>
                 <td>
-                  <p>{values.cnic}</p>
+                  <p>{appointment?.payload?.cnic}</p>
                 </td>
               </tr>
               <tr>
                 <td>Booking For</td>
                 <td>
-                  <p>{values.bookingFor}</p>
+                  <p>{format(Date.now(), "dd-MM-yyyy")}</p>
                 </td>
               </tr>
               <tr>
                 <td>Time Slot</td>
                 <td>
-                  <p>{values.timeSlot} Hours</p>
+                  <p>{appointment?.payload?.timeSlot} Hours</p>
+                </td>
+              </tr>
+              <tr>
+                <td>Dealing Time</td>
+                <td>
+                  <p>{appointment?.payload?.dealingTime}</p>
                   <p className="danger">
                     Note: You will not be entertained after dealing time
                   </p>
@@ -55,15 +64,9 @@ const FinalInfo: FC<FinalInfoProps> = ({ values }) => {
                 </td>
               </tr>
               <tr>
-                <td>Dealing Time</td>
-                <td>
-                  <p>{values.dealingTime}</p>
-                </td>
-              </tr>
-              <tr>
                 <td>Counter</td>
                 <td>
-                  <p> {values.counter}</p>
+                  <p> {appointment?.payload?.counter}</p>
                 </td>
               </tr>
               <tr>
@@ -71,13 +74,13 @@ const FinalInfo: FC<FinalInfoProps> = ({ values }) => {
                   <b>License Type</b>
                 </td>
                 <td>
-                  <p>{values.licenceType}</p>
+                  <p>{appointment?.payload?.licenceType}</p>
                 </td>
               </tr>
               <tr>
                 <td>Branch</td>
                 <td>
-                  <p>{values.branch}</p>
+                  <p>{appointment?.payload?.branch}</p>
                 </td>
               </tr>
             </tbody>

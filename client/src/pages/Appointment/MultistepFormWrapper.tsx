@@ -1,10 +1,10 @@
-import { ReactNode, Children, useState, ReactElement } from 'react';
-import { Formik, FormikConfig, FormikValues, Form } from 'formik';
-import Pagination from './components/Pagination';
-import { Button } from '../../components/common';
-import './appointmentStyles.scss';
+import { ReactNode, Children, useState, ReactElement } from "react";
+import { Formik, FormikConfig, FormikValues, Form } from "formik";
+import Pagination from "./components/Pagination";
+import { Button } from "../../components/common";
+import "./appointmentStyles.scss";
 export interface FormikStepProps
-  extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
+  extends Pick<FormikConfig<FormikValues>, "children" | "validationSchema"> {
   label: string;
 }
 interface MultistepFormWrapperProps {
@@ -41,37 +41,36 @@ export const MultistepFormWrapper = ({
         }
       }}
       validationSchema={currentValidationSchema}
+      validateOnBlur={false}
+      validateOnChange={false}
     >
       {({ isSubmitting }) => (
-        <Form autoComplete='off'>
+        <Form autoComplete="off">
           {currentChild}
-          <main className='form-footer'>
+          <main className="form-footer">
             {step > 0 ? (
-              <div className='action-btn'>
+              <div className="action-btn">
                 <Button
                   disabled={isSubmitting}
-                  variant='secondary'
+                  variant="secondary"
                   onClick={() => setStep((s) => s - 1)}
-                  type='button'
-                  title='Back'
+                  type="button"
+                  title="Back"
                 />
               </div>
             ) : null}
-            <div className='action-btn'>
+            <div className="action-btn">
               <Button
                 disabled={isSubmitting}
-                variant='secondary'
-                type='submit'
+                variant="secondary"
+                type="submit"
                 title={
-                  isSubmitting ? 'Submitting' : isLastStep() ? 'Submit' : 'Next'
+                  isSubmitting ? "Submitting" : isLastStep() ? "Submit" : "Next"
                 }
               />
             </div>
           </main>
-          <Pagination
-            length={childrenArray.length}
-            current={step}
-          />
+          <Pagination length={childrenArray.length} current={step} />
         </Form>
       )}
     </Formik>

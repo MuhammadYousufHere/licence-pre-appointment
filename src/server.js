@@ -38,6 +38,8 @@ app.use("/api/register", require("../routes/user"));
 app.use("/api/getprofile", require("../routes/profile"));
 app.use("/api/verify", require("../routes/verify"));
 app.use("/api/auth", require("../routes/auth"));
+app.use("/api/appointment", require("../routes/appointment"));
+app.use("/api/verifyappointment", require("../routes/verifyAppointment"));
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

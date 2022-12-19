@@ -8,6 +8,10 @@
   border-radius: 0.55rem;
   .branch_body {
     margin: 2rem 0;
+    .dropdown .dropdown-body .item-container {
+      overflow: auto;
+      max-height: 165px;
+    }
   }
   .branch_body_header {
     text-align: center;
