@@ -13,14 +13,10 @@ import Header from "./components/Header";
 import InitialInfo from "./components/InitialInfo";
 import "./appointmentStyles.scss";
 import { useFormValidation } from "../../hooks";
-import {
-  clearAppointment,
-  registerAppointment,
-} from "../../features/slices/appointmentSlice";
+import { registerAppointment } from "../../features/slices/appointmentSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const sleep = (time: number) => new Promise((acc) => setTimeout(acc, time));
 export interface IntialValues {
   step_1: {
     name: string;
@@ -162,14 +158,9 @@ const Appointment = () => {
     }
   }, [loading, error]);
   useEffect(() => {
-    // const navigator = setInterval(() => {
-
-    // }, 1000);
     if (appointment?.payload?.tokenNo) {
       navigate("/appointment/success");
     }
-
-    // return () => clearInterval(navigator);
   }, [appointment, navigate]);
 
   return (
@@ -250,6 +241,7 @@ const Appointment = () => {
           >
             <SeatSlot slotsData={seatSlotData} />
           </FormikStep>
+
           <FormikStep label="Confirm Info">
             <ConfirmInfo />
           </FormikStep>

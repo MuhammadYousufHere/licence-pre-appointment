@@ -15,9 +15,6 @@ const Header = () => {
             Online Pre-Appointment
           </div>
         </Link>
-        <div className="header-body-right">
-          <Link to="/appointment/verify">Verify Appointment</Link>
-        </div>
       </div>
     </div>
   );

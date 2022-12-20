@@ -3,12 +3,17 @@ import { useFormikContext } from "formik";
 import { Input } from "../../../components/Form";
 import { IntialValues } from "../Appointment";
 import "./initialInfo.scss";
+import { useUnmount } from "../../../hooks";
+import { useAppDispatch } from "../../../features/hooks";
+import { clearVerifyAppointment } from "../../../features/slices/appointmentSlice";
 
 interface InitialInfoProps {
   // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const InitialInfo: FC<InitialInfoProps> = () => {
+  const dispatch = useAppDispatch();
   const { values, handleChange, errors } = useFormikContext<IntialValues>();
+  useUnmount(() => dispatch(clearVerifyAppointment()));
   return (
     <div className="initial_info">
       <div className="initial_info_body">

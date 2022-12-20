@@ -28,9 +28,9 @@ router.post(
       // see if client exists
       let appointment = await Appointment.findOne({ cnic });
       const orignalDate =
-        appointment.submitted_at.getDate() +
+        appointment?.submitted_at?.getDate() +
         "-" +
-        appointment.submitted_at.getMonth();
+        appointment?.submitted_at?.getMonth();
       if (!appointment) {
         return res.status(404).json({
           msg: "Appointment doesn't exists, Please register first",

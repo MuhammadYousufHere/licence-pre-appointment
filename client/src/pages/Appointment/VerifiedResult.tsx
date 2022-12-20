@@ -1,8 +1,6 @@
-import { FC, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../../components/common";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { clearVerifyAppointment } from "../../features/slices/appointmentSlice";
+import { FC } from "react";
+
+import { useAppSelector } from "../../features/hooks";
 
 import { Card } from "./components";
 import FinalInfo from "./components/FinalInfo";
@@ -12,10 +10,6 @@ const Success: FC = () => {
   const { verifyAppointment, loading } = useAppSelector(
     (state) => state.appointment
   );
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    return () => {};
-  }, [dispatch]);
   if (loading) {
     return <div>Loading...</div>;
   }

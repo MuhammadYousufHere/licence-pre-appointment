@@ -20,6 +20,12 @@ const Success: FC = () => {
       dispatch(clearVerifyAppointment());
     };
   }, [dispatch]);
+  const verifyHandler = () => {
+    dispatch(clearAppointment());
+    navigate("/appointment/verify", {
+      state: { cnic: appointment.payload.cnic },
+    });
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -34,7 +40,7 @@ const Success: FC = () => {
             title="Verify Pre-Apointment"
             type="button"
             variant="secondary"
-            onClick={() => navigate("/appointment/verify")}
+            onClick={verifyHandler}
           />
         </div>
       </Card>

@@ -12,6 +12,11 @@
   justify-content: center;
   align-items: center;
 }
+@mixin flexStart {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 
 @mixin flexColumn {
   display: flex;
@@ -62,7 +67,7 @@
   background-size: $size;
 }
 @mixin barStyles($color) {
-  content: '';
+  content: "";
   position: absolute;
   width: 64px;
   height: 5px;
@@ -79,7 +84,7 @@
 
 // text
 @mixin fontStack {
-  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-family: "Poppins", "Roboto", sans-serif;
 }
 @mixin pageTitle($color) {
   font-size: 0.8rem;
@@ -91,5 +96,5 @@
   font-size: 19px;
   line-height: 1;
   font-weight: 300;
-  font-family: 'Poppins', 'Roboto', sans-serif;
+  font-family: "Poppins", "Roboto", sans-serif;
 }

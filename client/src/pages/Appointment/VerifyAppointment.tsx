@@ -10,8 +10,9 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import Header from "./components/Header";
 import { useFormValidation } from "../../hooks";
 import { verifyUserAppointment } from "../../features/slices/appointmentSlice";
+
 import AppointmentLoader from "../../components/AppointmentLoader/AppointmentLoader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ErrorMessage from "../../components/Form/ErrorMessage";
 const data = [
   {
@@ -23,16 +24,19 @@ const data = [
     name: "Tomorrow/Next Working Day",
   },
 ];
+
 const VerifyAppointment: FC = () => {
-  const { appointment, loading, error, verifyAppointment } = useAppSelector(
+  const { loading, error, verifyAppointment } = useAppSelector(
     (state) => state.appointment
   );
+  const location = useLocation();
+
   const dispatch = useAppDispatch();
   const validate = useFormValidation();
   const navigate = useNavigate();
   const [select, setSelect] = React.useState("");
-  const [cnic, setCnic] = React.useState<string | undefined | number>(
-    appointment?.payload?.cnic
+  const [cnic] = React.useState<string | undefined | number>(
+    location?.state?.cnic ?? ""
   );
   const { values, errors, setFieldValue, handleSubmit, handleChange } =
     useFormik({
@@ -47,11 +51,7 @@ const VerifyAppointment: FC = () => {
       validateOnBlur: false,
       validateOnChange: false,
     });
-  useEffect(() => {
-    if (appointment?.payload?.cnic) {
-      setCnic(appointment?.payload?.cnic);
-    }
-  }, [appointment]);
+
   useEffect(() => {
     if (error?.msg) {
     }
@@ -61,6 +61,7 @@ const VerifyAppointment: FC = () => {
       navigate("/appointment/verified");
     }
   }, [verifyAppointment, dispatch, navigate]);
+
   const date = new Date();
   const today = date.getDate() + "-" + date.getMonth();
   const tommorrow = date.getDate() + 1 + "-" + date.getMonth();
