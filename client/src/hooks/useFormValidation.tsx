@@ -36,6 +36,13 @@ const useFormValidation = () => {
   const dealingCounter = YUP.string().required(
     "Please select dealing counter and time slot"
   );
+  const images = YUP.array()
+    .of(YUP.string())
+    .min(
+      4,
+      "Please click at least 4 images, should be clear and visible wihout blur or any other issue with different angles"
+    )
+    .max(5, "You can click maximum 5 images");
   return {
     dealingCounter,
     foreName,
@@ -53,6 +60,7 @@ const useFormValidation = () => {
     captchacode,
     code,
     cnic,
+    images,
   };
 };
 

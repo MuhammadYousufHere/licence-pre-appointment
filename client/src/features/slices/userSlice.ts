@@ -20,7 +20,10 @@ export const registerUser = createAsyncThunk(
   async (userData: User, { rejectWithValue }) => {
     try {
       const response = await axios.post("api/register", userData, {
-        headers: config.header,
+        //muli-part form data
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       if (response.data) {

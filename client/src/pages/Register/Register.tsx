@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import Webcam from "react-webcam";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as YUP from "yup";
+import uuid from "react-uuid";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { operators } from "./helper";
 import { useFormValidation, useCountryInfo } from "../../hooks";
-
+import { ImageData } from "./Capture/Image";
 import { Wrapper, Button } from "../../components/common";
 import { HiUserPlus } from "react-icons/hi2";
 import { Dropdown, Input } from "../../components/Form";
@@ -26,6 +28,28 @@ type RegisterErrorResponse = {
   msgStatus: number;
 };
 const Register = () => {
+  const webcamRef = useRef<Webcam>(null);
+  const [imgSrcs, setImgSrcs] = useState<ImageData[]>([]);
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    if (imageSrc) {
+      if (imgSrcs.length < 5) {
+        setImgSrcs((prev) => [
+          ...prev,
+          { id: uuid(), img: imageSrc } as ImageData,
+        ]);
+        setFieldValue(
+          "profileImages",
+          imgSrcs.map((item) => item.img)
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [webcamRef, setImgSrcs, imgSrcs]);
+  const deleteHandler = (id: string | number) => {
+    setImgSrcs((prev) => prev.filter((item) => item.id !== id));
+  };
   const { countries, withPhoneCodes } = useCountryInfo();
   const validate = useFormValidation();
   const navigate = useNavigate();
@@ -38,7 +62,6 @@ const Register = () => {
   const [countryCode, setCountryCode] = useState<string | undefined>("+92");
   const [country, setSelectedCountry] = useState("");
   const [mobileOperater, setMobileOperator] = useState("");
-
   const dispatch = useAppDispatch();
   const initialValues = {
     foreName: "",
@@ -49,7 +72,8 @@ const Register = () => {
     password: "",
     country: "",
     confirmPassword: "",
-    captchaCode: "",
+    // captchaCode: "",
+    profileImages: [],
   };
 
   // form control
@@ -75,7 +99,8 @@ const Register = () => {
       country: validate.country,
       password: validate.password,
       confirmPassword: validate.confirmPassword,
-      captchaCode: validate.captchacode,
+      // captchaCode: validate.captchacode,
+      profileImages: validate.images,
     }),
     validateOnBlur: false,
     validateOnChange: false,
@@ -117,7 +142,6 @@ const Register = () => {
       </Wrapper>
     );
   }
-
   return (
     <>
       <Wrapper>
@@ -239,14 +263,20 @@ const Register = () => {
                     error={errors.confirmPassword}
                   />
                   <div className="images-capturerer">
-                    <ImageCapture />
+                    <ImageCapture
+                      ref={webcamRef}
+                      onDelete={deleteHandler}
+                      data={imgSrcs}
+                      onCapture={capture}
+                      error={errors.profileImages?.toString()}
+                    />
                   </div>
                   <div className="captcha-part">
                     <div className="captcha">
-                      <Captcha />
+                      {/* <Captcha />
                       {errors.captchaCode && touched.captchaCode && (
                         <ErrorMessage message={errors.captchaCode} />
-                      )}
+                      )} */}
                     </div>
                   </div>
                   <div className="saperator"></div>

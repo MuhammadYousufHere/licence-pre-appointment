@@ -1,7 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
-
+const faceapi = require("face-api.js");
+const { Canvas, Image } = require("canvas");
+const canvas = require("canvas");
 const { setEmail } = require("./email");
 const { sendSms } = require("./sms");
 require("dotenv").config();
@@ -16,6 +18,41 @@ const router = express.Router();
 // @desc   Register user
 // @access Public
 
+faceapi.env.monkeyPatch({ Canvas, Image });
+async function LoadModels() {
+  // Load the models
+  // __dirname gives the root directory of the server
+  await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + "/model");
+  await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + "/model");
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + "/model");
+}
+LoadModels();
+async function uploadLabeledImages(images, label) {
+  try {
+    const descriptions = [];
+    // Loop through the images
+    for (let i = 0; i < images.length; i++) {
+      const img = await canvas.loadImage(images[i]);
+      // Read each face and save the face descriptions in the descriptions array
+      const detections = await faceapi
+        .detectSingleFace(img)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+      descriptions.push(detections.descriptor);
+    }
+
+    // Create a new face document with the given label and save it in DB
+    const createFace = new Face({
+      label: label,
+      descriptions: descriptions,
+    });
+    await createFace.save();
+    return true;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 router.post(
   "/",
   [
@@ -25,6 +62,7 @@ router.post(
     check("mobileNum", "mobile number is required").not().isEmpty(),
     check("mobileOperater", "mobile operator is required").not().isEmpty(),
     check("email", "Please enter your valid email").isEmail(),
+
     check(
       "password",
       "Password is not correct, it should be 6 or more characters long"
@@ -32,6 +70,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       // send back bad response json
       return res.status(400).json({
@@ -48,10 +87,27 @@ router.post(
       email,
       password,
     } = req.body;
+    // get file from request
+    const profileImages = [req.files.profileImages.tempFilePath];
 
+    console.log(profileImages);
     try {
+      const pictures = [];
+      // Loop through the images
+      for (let i = 0; i < profileImages.length; i++) {
+        const img = await canvas.loadImage(profileImages[i]);
+        // Read each face and save the face descriptions in the descriptions array
+        const detections = await faceapi
+          .detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        pictures.push(detections.descriptor);
+      }
+
       // see if client exists
+
       let user = await User.findOne({ email });
+
       if (user) {
         return res.status(400).json({
           msg: "User already exists, Please try again with another email.",
@@ -68,6 +124,8 @@ router.post(
         email,
         password,
         code: CODE,
+        label: `${foreName} ${surname}`,
+        profileImages: pictures,
       });
 
       //Encrypt password
