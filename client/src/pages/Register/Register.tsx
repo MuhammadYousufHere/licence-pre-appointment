@@ -23,10 +23,10 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { registerUser } from "../../features/slices/userSlice";
 import Captcha from "../../components/Captcha";
 import ImageCapture from "./Capture/Capture";
-import pic from "../../assets/1.jpeg";
-import pic1 from "../../assets/2.jpeg";
-import pic2 from "../../assets/3.jpeg";
-import pic3 from "../../assets/4.jpeg";
+// import pic from "../../assets/1.jpeg";
+// import pic1 from "../../assets/2.jpeg";
+// import pic2 from "../../assets/3.jpeg";
+// import pic3 from "../../assets/4.jpeg";
 import { User } from "../../features/api";
 import { clearCaptcha } from "../../features/slices/captchaSlice";
 type RegisterErrorResponse = {
@@ -46,7 +46,7 @@ const Register = () => {
           { id: uuid(), img: imageSrc } as ImageData,
         ]);
         setFieldValue(
-          "profileImages",
+          "descriptions",
           imgSrcs.map((item) => item.img)
         );
       }
@@ -105,7 +105,7 @@ const Register = () => {
       data.append("password", formData.password);
       data.append("confirmPassword", formData.confirmPassword);
       data.append("captchaCode", formData.captchaCode);
-      data.append("descriptions", [pic, pic1, pic3] as unknown as Blob);
+      data.append("descriptions", formData.descriptions as unknown as Blob);
       dispatch(registerUser(data as unknown as User));
       dispatch(clearCaptcha());
     },
@@ -140,7 +140,6 @@ const Register = () => {
   useEffect(() => {
     if (isSuccess) {
       setFieldValue("captchaCode", isSuccess);
-      setFieldValue("descriptions", [pic, pic1, pic2, pic3]);
     }
   }, [isSuccess, setFieldValue]);
   useEffect(() => {
