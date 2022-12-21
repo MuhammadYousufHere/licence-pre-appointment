@@ -46,7 +46,7 @@ const userSchema = new Schema({
     type: String,
     unique: true,
   },
-  profileImages: {
+  descriptions: {
     type: Array,
     required: true,
   },

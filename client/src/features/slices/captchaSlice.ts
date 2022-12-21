@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 type Success = {
   success: boolean;
 };
@@ -17,15 +17,15 @@ const initialState = {
   isSuccess: false,
 };
 export const CAPTCHA = createAsyncThunk(
-  '/api/captcha',
+  "/api/captcha",
   async (token: string, { rejectWithValue }) => {
     try {
       const result = await axios.post(
-        '/api/captcha',
+        "/api/captcha",
         { token },
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -40,10 +40,10 @@ export const CAPTCHA = createAsyncThunk(
   }
 );
 const captchaSlice = createSlice({
-  name: 'captcha',
+  name: "captcha",
   initialState,
   reducers: {
-    reset: (state) => {
+    clearCaptcha: (state) => {
       state.isLoading = false;
       state.isSuccess = false;
       state.error = {} as Error;
@@ -66,3 +66,4 @@ const captchaSlice = createSlice({
   },
 });
 export default captchaSlice.reducer;
+export const { clearCaptcha } = captchaSlice.actions;

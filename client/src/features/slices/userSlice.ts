@@ -18,6 +18,7 @@ const config = {
 export const registerUser = createAsyncThunk(
   "api/register",
   async (userData: User, { rejectWithValue }) => {
+    console.log("userData", userData);
     try {
       const response = await axios.post("api/register", userData, {
         //muli-part form data

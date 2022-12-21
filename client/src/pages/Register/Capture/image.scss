@@ -46,7 +46,8 @@
     overflow: auto;
 
     .images-body {
-      max-width: 520px;
+      width: 100%;
+      justify-content: center;
     }
   }
 }

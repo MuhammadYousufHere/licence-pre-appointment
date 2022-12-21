@@ -23,6 +23,12 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { registerUser } from "../../features/slices/userSlice";
 import Captcha from "../../components/Captcha";
 import ImageCapture from "./Capture/Capture";
+import pic from "../../assets/1.jpeg";
+import pic1 from "../../assets/2.jpeg";
+import pic2 from "../../assets/3.jpeg";
+import pic3 from "../../assets/4.jpeg";
+import { User } from "../../features/api";
+import { clearCaptcha } from "../../features/slices/captchaSlice";
 type RegisterErrorResponse = {
   msg: string;
   msgStatus: number;
@@ -72,8 +78,8 @@ const Register = () => {
     password: "",
     country: "",
     confirmPassword: "",
-    // captchaCode: "",
-    profileImages: [],
+    captchaCode: "",
+    descriptions: [],
   };
 
   // form control
@@ -88,7 +94,20 @@ const Register = () => {
   } = useFormik({
     initialValues,
     onSubmit: (formData) => {
-      dispatch(registerUser(formData));
+      // dispatch(registerUser(formData));
+      const data = new FormData();
+      data.append("foreName", formData.foreName);
+      data.append("surname", formData.surname);
+      data.append("email", formData.email);
+      data.append("mobileOperater", formData.mobileOperater);
+      data.append("mobileNum", formData.mobileNum);
+      data.append("country", formData.country);
+      data.append("password", formData.password);
+      data.append("confirmPassword", formData.confirmPassword);
+      data.append("captchaCode", formData.captchaCode);
+      data.append("descriptions", [pic, pic1, pic3] as unknown as Blob);
+      dispatch(registerUser(data as unknown as User));
+      dispatch(clearCaptcha());
     },
     validationSchema: YUP.object().shape({
       foreName: validate.foreName,
@@ -99,8 +118,8 @@ const Register = () => {
       country: validate.country,
       password: validate.password,
       confirmPassword: validate.confirmPassword,
-      // captchaCode: validate.captchacode,
-      profileImages: validate.images,
+      captchaCode: validate.captchacode,
+      descriptions: validate.images,
     }),
     validateOnBlur: false,
     validateOnChange: false,
@@ -121,6 +140,7 @@ const Register = () => {
   useEffect(() => {
     if (isSuccess) {
       setFieldValue("captchaCode", isSuccess);
+      setFieldValue("descriptions", [pic, pic1, pic2, pic3]);
     }
   }, [isSuccess, setFieldValue]);
   useEffect(() => {
@@ -268,15 +288,15 @@ const Register = () => {
                       onDelete={deleteHandler}
                       data={imgSrcs}
                       onCapture={capture}
-                      error={errors.profileImages?.toString()}
+                      error={errors.descriptions?.toString()}
                     />
                   </div>
                   <div className="captcha-part">
                     <div className="captcha">
-                      {/* <Captcha />
+                      <Captcha />
                       {errors.captchaCode && touched.captchaCode && (
                         <ErrorMessage message={errors.captchaCode} />
-                      )} */}
+                      )}
                     </div>
                   </div>
                   <div className="saperator"></div>

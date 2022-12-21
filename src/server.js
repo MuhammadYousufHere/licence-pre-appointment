@@ -2,11 +2,41 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const multer = require("multer");
 const fileUpload = require("express-fileupload");
 const connectMongoBD = require("../config/db");
 dotenv.config();
 
 //
+//multer array of images upload
+const DIR = "../uploads/";
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, DIR);
+  },
+  filename: (req, file, cb) => {
+    const fileName = file.originalname.toLowerCase().split(" ").join("-");
+    cb(null, uuidv4() + "-" + fileName);
+  },
+});
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+    }
+  },
+});
+
+//
+
 const app = express();
 const port = process.env.PORT || 8080;
 //connectMongoBD
@@ -16,7 +46,7 @@ connectMongoBD();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(fileUpload({ useTempFiles: true }));
+// app.use(fileUpload({ useTempFiles: true }));
 // Serve static files from the React app
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")));
@@ -35,7 +65,11 @@ app.use("/api/captcha", require("../routes/varifyCaptcha"));
 app.use("/api/resetpassword", require("../routes/resetPassword"));
 app.use("/api/forgotpassword", require("../routes/forgotPassword"));
 app.use("/api/resendcode", require("../routes/resendCode"));
-app.use("/api/register", require("../routes/user"));
+app.use(
+  "/api/register",
+  upload.array("descriptions", 4),
+  require("../routes/user")
+);
 app.use("/api/getprofile", require("../routes/profile"));
 app.use("/api/verify", require("../routes/verify"));
 app.use("/api/auth", require("../routes/auth"));

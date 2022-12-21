@@ -7,6 +7,8 @@ const canvas = require("canvas");
 const { setEmail } = require("./email");
 const { sendSms } = require("./sms");
 require("dotenv").config();
+const fileUpload = require("express-fileupload");
+
 const { check, validationResult } = require("express-validator");
 const User = require("../model/User");
 //
@@ -27,32 +29,7 @@ async function LoadModels() {
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + "/model");
 }
 LoadModels();
-async function uploadLabeledImages(images, label) {
-  try {
-    const descriptions = [];
-    // Loop through the images
-    for (let i = 0; i < images.length; i++) {
-      const img = await canvas.loadImage(images[i]);
-      // Read each face and save the face descriptions in the descriptions array
-      const detections = await faceapi
-        .detectSingleFace(img)
-        .withFaceLandmarks()
-        .withFaceDescriptor();
-      descriptions.push(detections.descriptor);
-    }
 
-    // Create a new face document with the given label and save it in DB
-    const createFace = new Face({
-      label: label,
-      descriptions: descriptions,
-    });
-    await createFace.save();
-    return true;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-}
 router.post(
   "/",
   [
@@ -62,7 +39,7 @@ router.post(
     check("mobileNum", "mobile number is required").not().isEmpty(),
     check("mobileOperater", "mobile operator is required").not().isEmpty(),
     check("email", "Please enter your valid email").isEmail(),
-
+    check("descriptions", "Please upload your face images").not().isEmpty(),
     check(
       "password",
       "Password is not correct, it should be 6 or more characters long"
@@ -77,6 +54,7 @@ router.post(
         errors: errors.array(),
       });
     }
+
     // should setup middleware first
     const {
       foreName,
@@ -87,12 +65,15 @@ router.post(
       email,
       password,
     } = req.body;
-    // get file from request
-    const profileImages = [req.files.profileImages.tempFilePath];
 
-    console.log(profileImages);
     try {
+      console.log(req.files.descriptions);
+      // const profileImages = req.files.descriptions?.map((file) => {
+      //   return file.tempFilePath;
+      // });
+      const profileImages = [];
       const pictures = [];
+      console.log("here");
       // Loop through the images
       for (let i = 0; i < profileImages.length; i++) {
         const img = await canvas.loadImage(profileImages[i]);
@@ -125,7 +106,7 @@ router.post(
         password,
         code: CODE,
         label: `${foreName} ${surname}`,
-        profileImages: pictures,
+        descriptions: pictures,
       });
 
       //Encrypt password
@@ -181,7 +162,10 @@ router.post(
       );
     } catch (error) {
       console.error(error.message);
-      res.status(500).send("Server Error");
+      res.status(500).json({
+        msg: "Server Error",
+        status: 500,
+      });
     }
   }
 );
