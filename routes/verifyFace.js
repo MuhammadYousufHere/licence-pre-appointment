@@ -1,21 +1,21 @@
-const express = require("express");
-const faceapi = require("face-api.js");
-const { Canvas, Image } = require("canvas");
-const canvas = require("canvas");
-const Face = require("../model/Face");
+const express = require('express');
+const faceapi = require('face-api.js');
+const { Canvas, Image } = require('canvas');
+const canvas = require('canvas');
+const User = require('../model/User');
 faceapi.env.monkeyPatch({ Canvas, Image });
 const router = express.Router();
 async function LoadModels() {
   // Load the models
   // __dirname gives the root directory of the server
-  await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + "/model");
-  await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + "/model");
-  await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + "/model");
+  await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + '/model');
+  await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + '/model');
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + '/model');
 }
 LoadModels();
 async function getDescriptorsFromDB(image) {
   // Get all the face data from mongodb and loop through each of them to read the data
-  let faces = await Face.find();
+  let faces = await User.find();
   for (i = 0; i < faces.length; i++) {
     // Change the face data descriptors from Objects to Float32Array type
     for (j = 0; j < faces[i].descriptions.length; j++) {
@@ -51,13 +51,13 @@ async function getDescriptorsFromDB(image) {
   );
   return results;
 }
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   const File = req.files.File.tempFilePath;
   let result = await getDescriptorsFromDB(File);
   if (result) {
     res.json({ message: result });
   } else {
-    res.json({ message: "Something went wrong, please try again." });
+    res.json({ message: 'Something went wrong, please try again.' });
   }
 });
 

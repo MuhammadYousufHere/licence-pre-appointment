@@ -1,34 +1,34 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import Webcam from "react-webcam";
-import { Link, useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import * as YUP from "yup";
-import uuid from "react-uuid";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { operators } from "./helper";
-import { useFormValidation, useCountryInfo } from "../../hooks";
-import { ImageData } from "./Capture/Image";
-import { Wrapper, Button } from "../../components/common";
-import { HiUserPlus } from "react-icons/hi2";
-import { Dropdown, Input } from "../../components/Form";
-import Loader from "../../components/PreLoader/Loader";
-import Alert from "./Alert";
-import Footer from "../Footer";
-import "./RegisterStyle.scss";
-import ScrollToTop from "../../components/ScrollTop";
-import DropdownSearch from "../../components/dropdown/dropdownSearch";
-import ErrorMessage from "../../components/Form/ErrorMessage";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { registerUser } from "../../features/slices/userSlice";
-import Captcha from "../../components/Captcha";
-import ImageCapture from "./Capture/Capture";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import Webcam from 'react-webcam';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as YUP from 'yup';
+import uuid from 'react-uuid';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { operators } from './helper';
+import { useFormValidation, useCountryInfo } from '../../hooks';
+import { ImageData } from './Capture/Image';
+import { Wrapper, Button } from '../../components/common';
+import { HiUserPlus } from 'react-icons/hi2';
+import { Dropdown, Input } from '../../components/Form';
+import Loader from '../../components/PreLoader/Loader';
+import Alert from './Alert';
+import Footer from '../Footer';
+import './RegisterStyle.scss';
+import ScrollToTop from '../../components/ScrollTop';
+import DropdownSearch from '../../components/dropdown/dropdownSearch';
+import ErrorMessage from '../../components/Form/ErrorMessage';
+import { useAppDispatch, useAppSelector } from '../../features/hooks';
+import { registerUser } from '../../features/slices/userSlice';
+import Captcha from '../../components/Captcha';
+import ImageCapture from './Capture/Capture';
 // import pic from "../../assets/1.jpeg";
 // import pic1 from "../../assets/2.jpeg";
 // import pic2 from "../../assets/3.jpeg";
 // import pic3 from "../../assets/4.jpeg";
-import { User } from "../../features/api";
-import { clearCaptcha } from "../../features/slices/captchaSlice";
+import { User } from '../../features/api';
+import { clearCaptcha } from '../../features/slices/captchaSlice';
 type RegisterErrorResponse = {
   msg: string;
   msgStatus: number;
@@ -46,7 +46,7 @@ const Register = () => {
           { id: uuid(), img: imageSrc } as ImageData,
         ]);
         setFieldValue(
-          "descriptions",
+          'descriptions',
           imgSrcs.map((item) => item.img)
         );
       }
@@ -65,20 +65,20 @@ const Register = () => {
   const { isSuccess } = useAppSelector((state) => state.captcha);
   const [errorLog, setError] = useState<RegisterErrorResponse>();
 
-  const [countryCode, setCountryCode] = useState<string | undefined>("+92");
-  const [country, setSelectedCountry] = useState("");
-  const [mobileOperater, setMobileOperator] = useState("");
+  const [countryCode, setCountryCode] = useState<string | undefined>('+92');
+  const [country, setSelectedCountry] = useState('');
+  const [mobileOperater, setMobileOperator] = useState('');
   const dispatch = useAppDispatch();
   const initialValues = {
-    foreName: "",
-    surname: "",
-    email: "",
+    foreName: '',
+    surname: '',
+    email: '',
     mobileOperater,
-    mobileNum: "",
-    password: "",
-    country: "",
-    confirmPassword: "",
-    captchaCode: "",
+    mobileNum: '',
+    password: '',
+    country: '',
+    confirmPassword: '',
+    captchaCode: '',
     descriptions: [],
   };
 
@@ -94,19 +94,8 @@ const Register = () => {
   } = useFormik({
     initialValues,
     onSubmit: (formData) => {
-      // dispatch(registerUser(formData));
-      const data = new FormData();
-      data.append("foreName", formData.foreName);
-      data.append("surname", formData.surname);
-      data.append("email", formData.email);
-      data.append("mobileOperater", formData.mobileOperater);
-      data.append("mobileNum", formData.mobileNum);
-      data.append("country", formData.country);
-      data.append("password", formData.password);
-      data.append("confirmPassword", formData.confirmPassword);
-      data.append("captchaCode", formData.captchaCode);
-      data.append("descriptions", formData.descriptions as unknown as Blob);
-      dispatch(registerUser(data as unknown as User));
+      dispatch(registerUser(formData));
+
       dispatch(clearCaptcha());
     },
     validationSchema: YUP.object().shape({
@@ -134,12 +123,12 @@ const Register = () => {
 
   const handleCountryClick = (cName: string) => {
     setCountryCode(countryCodeHandler(cName));
-    setFieldValue("country", cName);
+    setFieldValue('country', cName);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      setFieldValue("captchaCode", isSuccess);
+      setFieldValue('captchaCode', isSuccess);
     }
   }, [isSuccess, setFieldValue]);
   useEffect(() => {
@@ -147,10 +136,10 @@ const Register = () => {
       setError({ msg: error.msg, msgStatus: error.msgStatus });
     }
     if (registerUserObj?.status === 201) {
-      toast(registerUserObj.msg, { type: "success" });
+      toast(registerUserObj.msg, { type: 'success' });
       resetForm();
       setTimeout(() => {
-        navigate("/inprocess");
+        navigate('/inprocess');
       }, 3000);
     }
   }, [dispatch, navigate, error, registerUserObj, resetForm]);
@@ -164,63 +153,63 @@ const Register = () => {
   return (
     <>
       <Wrapper>
-        <div className="row bottom-reg">
-          <div className="left">
-            <div className="row top-reg">
-              <div className="left">
+        <div className='row bottom-reg'>
+          <div className='left'>
+            <div className='row top-reg'>
+              <div className='left'>
                 <h1>Step 1</h1>
                 <h3>Personal Information</h3>
               </div>
-              <div className="right">
+              <div className='right'>
                 <h1>Step 2</h1>
                 <h3>Email/Mobile Varification</h3>
               </div>
             </div>
-            <div className="register">
-              <div className="bar"></div>
-              <div className="register__content">
-                <div className="icon">
+            <div className='register'>
+              <div className='bar'></div>
+              <div className='register__content'>
+                <div className='icon'>
                   <HiUserPlus />
                 </div>
-                <div className="register__content__title">
+                <div className='register__content__title'>
                   <h2>Registration</h2>
                 </div>
-                <div className="saperator"></div>
+                <div className='saperator'></div>
 
                 <form onSubmit={handleSubmit}>
-                  <div className="info">
+                  <div className='info'>
                     <p>
                       Create an account to register yourself in Pak-Identity
                       System.
                     </p>
                     Or
-                    <Link to="/login"> Signin with your existing account</Link>
+                    <Link to='/login'> Signin with your existing account</Link>
                   </div>
-                  <div className="log-error">
+                  <div className='log-error'>
                     {errorLog?.msg && <ErrorMessage message={errorLog?.msg} />}
                   </div>
                   <Input
-                    type="text"
-                    name="foreName"
-                    id="name"
-                    label="Forname(S)"
+                    type='text'
+                    name='foreName'
+                    id='name'
+                    label='Forname(S)'
                     value={values.foreName}
                     onChange={handleChange}
                     error={errors.foreName}
                   />
                   <Input
-                    type="text"
-                    name="surname"
-                    id="surname"
-                    label="Surname"
+                    type='text'
+                    name='surname'
+                    id='surname'
+                    label='Surname'
                     value={values.surname}
                     onChange={handleChange}
                     error={errors.surname}
                   />
 
                   <DropdownSearch
-                    label="Country"
-                    id="country"
+                    label='Country'
+                    id='country'
                     dropDownData={countries}
                     dropDownItem={country}
                     setDropdownItem={setSelectedCountry}
@@ -230,58 +219,58 @@ const Register = () => {
                   <Alert />
 
                   <Dropdown
-                    id="mobileOperater"
-                    label="Mobile Operater"
+                    id='mobileOperater'
+                    label='Mobile Operater'
                     selectedItem={mobileOperater}
                     handleItemClick={(OperatorName) =>
-                      setFieldValue("mobileOperater", OperatorName)
+                      setFieldValue('mobileOperater', OperatorName)
                     }
                     data={operators}
                     errorMessage={errors.mobileOperater}
                     setSelectedItem={setMobileOperator}
                   />
-                  <label htmlFor="mobile-num">Mobile No</label>
-                  <div className="phonenum">
-                    <div className="operator-code">
+                  <label htmlFor='mobile-num'>Mobile No</label>
+                  <div className='phonenum'>
+                    <div className='operator-code'>
                       <p>{countryCode}</p>
                     </div>
                     <Input
-                      type="tel"
-                      name="mobileNum"
-                      id="mobile-num"
+                      type='tel'
+                      name='mobileNum'
+                      id='mobile-num'
                       value={values.mobileNum}
                       onChange={handleChange}
                       error={errors.mobileNum}
                     />
                   </div>
                   <Input
-                    type="email"
-                    name="email"
-                    id="email"
-                    label="Email"
+                    type='email'
+                    name='email'
+                    id='email'
+                    label='Email'
                     value={values.email}
                     onChange={handleChange}
                     error={errors.email}
                   />
                   <Input
-                    type={"password"}
-                    name="password"
-                    id="password"
-                    label="Password"
+                    type={'password'}
+                    name='password'
+                    id='password'
+                    label='Password'
                     value={values.password}
                     onChange={handleChange}
                     error={errors.password}
                   />
                   <Input
-                    type={"password"}
-                    name="confirmPassword"
-                    id="re-password"
-                    label="RE-TYPE YOUR PASSWORD"
+                    type={'password'}
+                    name='confirmPassword'
+                    id='re-password'
+                    label='RE-TYPE YOUR PASSWORD'
                     value={values.confirmPassword}
                     onChange={handleChange}
                     error={errors.confirmPassword}
                   />
-                  <div className="images-capturerer">
+                  <div className='images-capturerer'>
                     <ImageCapture
                       ref={webcamRef}
                       onDelete={deleteHandler}
@@ -290,32 +279,36 @@ const Register = () => {
                       error={errors.descriptions?.toString()}
                     />
                   </div>
-                  <div className="captcha-part">
-                    <div className="captcha">
+                  <div className='captcha-part'>
+                    <div className='captcha'>
                       <Captcha />
                       {errors.captchaCode && touched.captchaCode && (
                         <ErrorMessage message={errors.captchaCode} />
                       )}
                     </div>
                   </div>
-                  <div className="saperator"></div>
-                  <div className="submit">
-                    <Button type="submit" title="Next" variant="secondary" />
+                  <div className='saperator'></div>
+                  <div className='submit'>
+                    <Button
+                      type='submit'
+                      title='Next'
+                      variant='secondary'
+                    />
                   </div>
                 </form>
               </div>
             </div>
           </div>
-          <div className="right ">
-            <div className="row top-reg hidden">
-              <div className="left">
+          <div className='right '>
+            <div className='row top-reg hidden'>
+              <div className='left'>
                 <h1>Step </h1>
                 <h3>Personal </h3>
               </div>
             </div>
-            <main className="bottom_right">
-              <div className="bar"></div>
-              <div className="bottom_right__content">
+            <main className='bottom_right'>
+              <div className='bar'></div>
+              <div className='bottom_right__content'>
                 <h3>Mobile Number</h3>
 
                 <p>Provide mobile number registered with PTA.</p>
@@ -332,7 +325,7 @@ const Register = () => {
         <ToastContainer />
         <ScrollToTop smooth />
       </Wrapper>
-      <div className="hidden-first">
+      <div className='hidden-first'>
         <Footer />
       </div>
     </>

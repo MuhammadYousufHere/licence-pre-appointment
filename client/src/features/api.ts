@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export interface User {
   foreName: string;
@@ -9,7 +9,7 @@ export interface User {
   email: string;
   country: string;
   varified?: boolean;
-  profileImages: string[];
+  descriptions: string[];
 }
 export type UserLogin = {
   email: string;
@@ -23,11 +23,11 @@ export type UserVerify = {
   email: string;
   code: string;
 };
-const URL = "/api/";
+const URL = '/api/';
 
 const config = {
   header: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 };
 export const getUserFromDB = async (userId: string) => {
@@ -46,12 +46,12 @@ export const getUserFromDB = async (userId: string) => {
 //register
 export const register = async (userData: User) => {
   try {
-    const response = await axios.post(URL + "register", userData, {
+    const response = await axios.post(URL + 'register', userData, {
       headers: config.header,
     });
 
     if (response.data) {
-      localStorage.setItem("token", JSON.stringify(response.data));
+      localStorage.setItem('token', JSON.stringify(response.data));
       return response.data;
     }
     return response;
@@ -68,11 +68,11 @@ export const register = async (userData: User) => {
 // login
 export const login = async (userData: UserLogin) => {
   try {
-    const response = await axios.post(URL + "auth", userData);
+    const response = await axios.post(URL + 'auth', userData);
     if (response.data) {
-      localStorage.setItem("token", JSON.stringify(response.data));
+      localStorage.setItem('token', JSON.stringify(response.data));
     }
-    return response.status === 200 ? response.data : { error: "error" };
+    return response.status === 200 ? response.data : { error: 'error' };
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
       console.log(err.response?.data);
@@ -85,7 +85,7 @@ export const login = async (userData: UserLogin) => {
 
 export const verify = async (userData: UserVerify) => {
   try {
-    const response = await axios.post(URL + "verify", userData);
+    const response = await axios.post(URL + 'verify', userData);
     return response.data;
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
@@ -99,15 +99,15 @@ export const verify = async (userData: UserVerify) => {
 
 // Logout
 export const logout = () => {
-  localStorage.removeItem("token");
+  localStorage.removeItem('token');
 };
 
 export default function authHeader() {
-  const token = localStorage.getItem("token")!;
+  const token = localStorage.getItem('token')!;
   const userToken = JSON.parse(token);
   //
   if (userToken) {
-    return { "x-auth-token": userToken.token };
+    return { 'x-auth-token': userToken.token };
   } else {
     return {};
   }
