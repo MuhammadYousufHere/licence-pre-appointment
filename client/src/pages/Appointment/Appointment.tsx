@@ -161,7 +161,7 @@ const Appointment = () => {
     if (appointment?.payload?.tokenNo) {
       navigate("/appointment/success");
     }
-  }, [appointment, navigate]);
+  }, [appointment, navigate, loading]);
 
   return (
     <>

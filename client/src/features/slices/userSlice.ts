@@ -29,9 +29,8 @@ export const registerUser = createAsyncThunk(
 
       if (response.data) {
         localStorage.setItem("token", JSON.stringify(response.data));
-        return response.data;
       }
-      return response;
+      return response.data;
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         const msg = err.response?.data.msg;

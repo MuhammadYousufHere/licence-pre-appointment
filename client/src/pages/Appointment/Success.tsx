@@ -6,11 +6,11 @@ import {
   clearAppointment,
   clearVerifyAppointment,
 } from "../../features/slices/appointmentSlice";
-
 import { Card } from "./components";
 import FinalInfo from "./components/FinalInfo";
 import Header from "./components/Header";
 import "./success.scss";
+
 const Success: FC = () => {
   const { appointment, loading } = useAppSelector((state) => state.appointment);
   const navigate = useNavigate();

@@ -22,7 +22,7 @@ export const MultistepFormWrapper = ({
   ) as ReactElement<FormikStepProps>[];
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
-  const [_, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const currentValidationSchema = currentChild.props.validationSchema;
   function isLastStep() {
     return step === childrenArray.length - 1;

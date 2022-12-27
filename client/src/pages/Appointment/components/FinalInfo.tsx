@@ -12,7 +12,7 @@ const FinalInfo: FC<FinalInfoProps> = ({ appointment }) => {
     <div className="finalinfo-container">
       <div className="finalinfo_body">
         <div className="finalinfo_body_header">
-          <img src={wa} alt="whatsapp info" />
+          <img src={wa} alt="whatsapp info" width={150} />
         </div>
         <div className="table-responsive">
           <table className="table table-bordered" id="tableOne3">
