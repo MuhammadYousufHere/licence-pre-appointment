@@ -17,6 +17,7 @@ import { registerAppointment } from "../../features/slices/appointmentSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/PreLoader/Loader";
 export interface IntialValues {
   step_1: {
     name: string;
@@ -161,7 +162,9 @@ const Appointment = () => {
     if (appointment?.payload?.tokenNo) {
       navigate("/appointment/success");
     }
-  }, [appointment, navigate, loading]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate, loading]);
 
   return (
     <>
@@ -172,14 +175,14 @@ const Appointment = () => {
           onSubmit={async (values) => {
             dispatch(
               registerAppointment({
+                name: values.step_1.name,
+                mobileNum: values.step_1.mobile,
+                cnic: values.step_1.cnic,
                 branch: values.step_2.branch,
                 licenceType: values.step_3.licenceType,
                 timeSlot: values.step_4.timeSlot,
                 counter: values.step_5.counter,
                 dealingTime: values.step_5.dealingTime,
-                name: values.step_1.name,
-                mobileNum: values.step_1.mobile,
-                cnic: values.step_1.cnic,
               })
             );
           }}

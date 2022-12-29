@@ -72,7 +72,8 @@ router.post(
       });
       const message = `Your appointment has been registered successfully. Your token number is ${TOKEN}. Please visit the counter on time.`;
       await appointment.save();
-      sendSms(mobileNum, message);
+      //commented to avoid sending sms
+      // sendSms(mobileNum, message);
 
       res.status(200).json({
         msg: "Appointment has been registered successfully",

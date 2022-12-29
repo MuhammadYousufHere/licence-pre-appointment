@@ -73,6 +73,15 @@ router.post(
     try {
       // Loop through the images
 
+      // see if client exists
+
+      let user = await User.findOne({ email });
+
+      if (user) {
+        return res.status(400).json({
+          msg: "User already exists, Please try again with another email.",
+        });
+      }
       const pictures = [];
       console.log(descriptions.length);
       // Loop through the images
@@ -84,16 +93,6 @@ router.post(
           .withFaceLandmarks()
           .withFaceDescriptor();
         pictures.push(detections.descriptor);
-      }
-
-      // see if client exists
-
-      let user = await User.findOne({ email });
-
-      if (user) {
-        return res.status(400).json({
-          msg: "User already exists, Please try again with another email.",
-        });
       }
       const CODE = Math.floor(100000 + Math.random() * 900000);
 
@@ -140,7 +139,8 @@ router.post(
     NADRA
   `;
       const title = "Verification Code";
-      sendSms(mobileNum, Message);
+      // comment out the following line to disable sms
+      // sendSms(mobileNum, Message);
       setEmail(email, Message, title);
 
       jsonwebtoken.sign(

@@ -106,7 +106,7 @@ const Register = () => {
         formData.append("descriptions", form.descriptions[i]);
       }
       dispatch(registerUser(formData as any));
-
+      setError(undefined);
       dispatch(clearCaptcha());
     },
     validationSchema: YUP.object().shape({

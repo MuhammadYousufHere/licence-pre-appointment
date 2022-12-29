@@ -26,6 +26,7 @@ export const registerAppointment = createAsyncThunk(
           "x-auth-token": token.token,
         },
       });
+      console.log(response.data);
       return response.data;
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -112,15 +113,14 @@ export const appointmentSlice = createSlice({
       .addCase(registerAppointment.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        registerAppointment.fulfilled,
-        (state, action: PayloadAction<Appointment>) => {
-          state.loading = false;
-          state.appointment = action.payload;
-        }
-      )
+      .addCase(registerAppointment.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log(action.payload);
+        state.appointment = action.payload;
+      })
       .addCase(registerAppointment.rejected, (state, action) => {
         state.loading = false;
+
         state.error = action.payload as Error;
       })
       .addCase(verifyUserAppointment.pending, (state) => {

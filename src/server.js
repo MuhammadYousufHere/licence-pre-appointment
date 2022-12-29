@@ -2,9 +2,11 @@ const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const enforce = require("express-sslify");
 const fileUpload = require("express-fileupload");
 const connectMongoBD = require("../config/db");
 dotenv.config();
+
 // const multer = require("multer");
 
 // const DIR = '../images';
@@ -51,6 +53,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({ useTempFiles: true }));
 // Serve static files from the React app
 if (process.env.NODE_ENV === "production") {
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
   app.use(express.static(path.join(__dirname, "../client/build")));
 
   app.get("*", (req, res) => {

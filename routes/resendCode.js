@@ -42,7 +42,8 @@ router.post("/", async function (req, res) {
     NADRA
   `;
     const title = "Verification Code";
-    sendSms(user.mobileNum, Message);
+    //comment out the following line to stop sending sms
+    // sendSms(user.mobileNum, Message);
     setEmail(email, Message, title);
 
     return res.status(200).json({
