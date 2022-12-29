@@ -18,7 +18,6 @@ const config = {
 export const registerUser = createAsyncThunk(
   "api/register",
   async (userData: User, { rejectWithValue }) => {
-    console.log("userData", userData);
     try {
       const response = await axios.post("api/register", userData, {
         //muli-part form data
@@ -27,9 +26,6 @@ export const registerUser = createAsyncThunk(
         },
       });
 
-      if (response.data) {
-        localStorage.setItem("token", JSON.stringify(response.data));
-      }
       return response.data;
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -88,7 +84,14 @@ const initialState: UserState = {
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    clearUser: (state) => {
+      state.user = null;
+      state.loading = false;
+      state.error = {} as RegisterErrorResponse;
+      state.registerUserObj = {} as RegisterResponse;
+    },
+  },
   extraReducers: function (builder) {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -133,3 +136,4 @@ const userSlice = createSlice({
   },
 });
 export default userSlice.reducer;
+export const { clearUser } = userSlice.actions;

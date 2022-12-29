@@ -1,15 +1,16 @@
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jsonwebtoken = require('jsonwebtoken');
-const faceapi = require('face-api.js');
-const { Canvas, Image } = require('canvas');
-const canvas = require('canvas');
-const { setEmail } = require('./email');
-const { sendSms } = require('./sms');
-require('dotenv').config();
+const express = require("express");
+const bcrypt = require("bcryptjs");
+const _ = require("lodash");
+const jsonwebtoken = require("jsonwebtoken");
+const faceapi = require("face-api.js");
+const { Canvas, Image } = require("canvas");
+const canvas = require("canvas");
+const { setEmail } = require("./email");
+const { sendSms } = require("./sms");
+require("dotenv").config();
 
-const { check, validationResult } = require('express-validator');
-const User = require('../model/User');
+const { check, validationResult } = require("express-validator");
+const User = require("../model/User");
 //
 
 // using express routes
@@ -23,25 +24,24 @@ faceapi.env.monkeyPatch({ Canvas, Image });
 async function LoadModels() {
   // Load the models
   // __dirname gives the root directory of the server
-  await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + '/model');
-  await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + '/model');
-  await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + '/model');
+  await faceapi.nets.faceRecognitionNet.loadFromDisk(__dirname + "/model");
+  await faceapi.nets.faceLandmark68Net.loadFromDisk(__dirname + "/model");
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(__dirname + "/model");
 }
 LoadModels();
 
 router.post(
-  '/',
+  "/",
   [
-    check('foreName', 'foreName is required').not().isEmpty(),
-    check('surname', 'surname is required').not().isEmpty(),
-    check('country', 'country is required').not().isEmpty(),
-    check('mobileNum', 'mobile number is required').not().isEmpty(),
-    check('mobileOperater', 'mobile operator is required').not().isEmpty(),
-    check('email', 'Please enter your valid email').isEmail(),
-    check('descriptions', 'Please upload your face images').not().isEmpty(),
+    check("foreName", "foreName is required").not().isEmpty(),
+    check("surname", "surname is required").not().isEmpty(),
+    check("country", "country is required").not().isEmpty(),
+    check("mobileNum", "mobile number is required").not().isEmpty(),
+    check("mobileOperater", "mobile operator is required").not().isEmpty(),
+    check("email", "Please enter your valid email").isEmail(),
     check(
-      'password',
-      'Password is not correct, it should be 6 or more characters long'
+      "password",
+      "Password is not correct, it should be 6 or more characters long"
     ).isLength({ min: 6, max: 20 }),
   ],
   async (req, res) => {
@@ -53,7 +53,6 @@ router.post(
         errors: errors.array(),
       });
     }
-
     // should setup middleware first
     // if (!req.files || Object.keys(req.files).length === 0) {
     //   return res.status(400).json({
@@ -71,14 +70,14 @@ router.post(
       password,
       descriptions,
     } = req.body;
-
     try {
-      const profileImages = descriptions;
+      // Loop through the images
 
       const pictures = [];
+      console.log(descriptions.length);
       // Loop through the images
-      for (let i = 0; i < profileImages.length; i++) {
-        const img = await canvas.loadImage(profileImages[i]);
+      for (let i = 0; i < descriptions.length; i++) {
+        const img = await canvas.loadImage(descriptions[i]);
         // Read each face and save the face descriptions in the descriptions array
         const detections = await faceapi
           .detectSingleFace(img)
@@ -93,7 +92,7 @@ router.post(
 
       if (user) {
         return res.status(400).json({
-          msg: 'User already exists, Please try again with another email.',
+          msg: "User already exists, Please try again with another email.",
         });
       }
       const CODE = Math.floor(100000 + Math.random() * 900000);
@@ -140,7 +139,7 @@ router.post(
     PAK Identity Team,
     NADRA
   `;
-      const title = 'Verification Code';
+      const title = "Verification Code";
       sendSms(mobileNum, Message);
       setEmail(email, Message, title);
 
@@ -156,7 +155,7 @@ router.post(
             foreName: user.foreName,
             surname: user.surname,
             email: user.email,
-            msg: 'User successfully created',
+            msg: "User successfully created",
             status: 201,
           });
         }
@@ -164,7 +163,7 @@ router.post(
     } catch (error) {
       console.error(error.message);
       res.status(500).json({
-        msg: 'Server Error',
+        msg: "Server Error",
         status: 500,
       });
     }

@@ -20,7 +20,7 @@ import ScrollToTop from "../../components/ScrollTop";
 import DropdownSearch from "../../components/dropdown/dropdownSearch";
 import ErrorMessage from "../../components/Form/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { registerUser } from "../../features/slices/userSlice";
+import { clearUser, registerUser } from "../../features/slices/userSlice";
 import Captcha from "../../components/Captcha";
 import ImageCapture from "./Capture/Capture";
 // import pic from "../../assets/1.jpeg";
@@ -82,6 +82,7 @@ const Register = () => {
   };
 
   // form control
+  let formData = new FormData();
   const {
     values,
     handleChange,
@@ -92,8 +93,19 @@ const Register = () => {
     touched,
   } = useFormik({
     initialValues,
-    onSubmit: (formData) => {
-      dispatch(registerUser(formData));
+    onSubmit: (form) => {
+      formData.append("foreName", form.foreName);
+      formData.append("surname", form.surname);
+      formData.append("email", form.email);
+      formData.append("mobileOperater", form.mobileOperater);
+      formData.append("mobileNum", form.mobileNum);
+      formData.append("country", form.country);
+      formData.append("password", form.password);
+      // append images
+      for (let i = 0; i < form.descriptions.length; i++) {
+        formData.append("descriptions", form.descriptions[i]);
+      }
+      dispatch(registerUser(formData as any));
 
       dispatch(clearCaptcha());
     },
@@ -124,7 +136,9 @@ const Register = () => {
     setCountryCode(countryCodeHandler(cName));
     setFieldValue("country", cName);
   };
-
+  useEffect(() => {
+    dispatch(clearUser());
+  }, [dispatch]);
   useEffect(() => {
     if (isSuccess) {
       setFieldValue("captchaCode", isSuccess);

@@ -46,7 +46,7 @@ connectMongoBD();
 
 //
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload({ useTempFiles: true }));
 // Serve static files from the React app
@@ -67,7 +67,7 @@ app.use("/api/captcha", require("../routes/varifyCaptcha"));
 app.use("/api/resetpassword", require("../routes/resetPassword"));
 app.use("/api/forgotpassword", require("../routes/forgotPassword"));
 app.use("/api/resendcode", require("../routes/resendCode"));
-app.use("/api/register", require("../routes/user"));
+app.use("/api/register", require("../routes/registerUser"));
 app.use("/api/getprofile", require("../routes/profile"));
 app.use("/api/verify", require("../routes/verify"));
 app.use("/api/auth", require("../routes/auth"));
